@@ -1,24 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import Heading from "./components/Heading"
+import Category from "./components/Category"
+import List from "./components/List"
+import {useState, useEffect} from "react"
+import data from "./data"
+import {Context} from "./components/context"
 
 function App() {
+  const [items, setItems] = useState([])
+
+  const all = () => (setItems(data))
+
+  const breakfast = () => {
+    setItems(data.filter((item) => item.category === "breakfast"))
+  }
+  const lunch = () => {
+    setItems(data.filter((item) => item.category === "lunch"))
+  }
+  const shakes = () => {
+    setItems(data.filter((item) => item.category === "shakes"))
+  }
+  
+  useEffect(() => {
+    all()
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Context.Provider value={{
+      all, breakfast, lunch, shakes
+    }}>
+      <div>
+        <Heading/>
+        <Category/>
+        {items.length === 0 ? <h4>Loading...</h4> : <List dishes={items}/>}
+      </div>
+    </Context.Provider>
   );
 }
 
